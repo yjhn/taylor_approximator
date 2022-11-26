@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from PIL import ImageTk
+from matplotlib import pyplot as plt
 
 class Taylor:
     
@@ -14,47 +15,31 @@ class Taylor:
         root.columnconfigure(0, weight=1)
         root.rowconfigure(0, weight=1)
         
-        # Input frame
-        self.input_frame = ttk.Frame(self.mainframe)
-        self.input_frame.grid(column=1, row=1, sticky=(W, N))
+        # Frame for everything except the approximated function.
+        self.big_frame = ttk.Frame(self.mainframe)
+        self.big_frame.grid(column=1, row=2, sticky=(W, N))
         
-        # Function input combobox
-        # TODO
-        self.input_fn = StringVar()
-        input_fn_field = ttk.Entry(self.input_frame, width=15, textvariable=self.input_fn)
-        input_fn_field.grid(column=1, row=1, sticky=(W, N))
-#         
-#         # Funckijos taškas x
-#         self.input_fn_point = StringVar()
-#         input_fn_point_field = ttk.Entry(self.input_frame, width=7, textvariable=self.input_fn_point)
-#         input_fn_point_field.grid(column=1, row=1)
-#         
-#         # Funkcijos taško aplinka V(x)
-#         self.input_fn_point_area = StringVar()
-#         point_area = ttk.Entry(self.inputframe, width=15, textvariable=self.input_fn_point_area)
-#         point_area.grid(column=1, row=1)
+        self.create_label_input_frame(self.big_frame)
         
-        # "Aproksimuok" mygtukas
-        self.approximate_btn = ttk.Button(self.input_frame, text="Aproksimuok", command=self.calculate_taylor)
-        self.approximate_btn.grid(column=4, row=1, sticky=(N, E))
+        # Grafikas
+        # pl = plt.plot()
+        # plt.savefig("empty_plot.png")
         
-        
-        for child in self.input_frame.winfo_children():
-            child.grid_configure(padx=5, pady=5)
-        
-        # Originalios funkcijos grafikas
-        self.output_img_source_fn = ttk.Label(self.mainframe)
-        self.output_img_source_fn.grid(column=1, row=2, sticky=(W, N))
+        self.plot = ttk.Label(self.big_frame)
+        self.plot.grid(column=2, row=1, sticky=(W, N))
+        self.plot_img = ImageTk.PhotoImage(file="empty_plot.png")
+        self.plot["image"] = self.plot_img
         
         # Sugeneruota funkcija
-        self.output_function = StringVar()
-        output_function_label = ttk.Label(self.mainframe, textvariable=self.output_function)
-        output_function_label.grid(column=2, row=1, sticky=W)
+        self.taylor_frame = ttk.Frame(self.mainframe)
+        self.taylor_frame.grid(column=1, row=1, sticky=(W, N))
         
-        # Sugeneruotos funkcijos grafikas
-        self.output_img_dest_fn = ttk.Label(self.mainframe)
-        self.output_img_dest_fn.grid(column=2, row=2, sticky=(W, N))
+        self.output_fn_label_label = ttk.Label(self.taylor_frame, text="Teiloro eilutė:  ")
+        self.output_fn_label_label.grid(column=1, row=1, sticky=(E, N))
         
+        self.output_fn = StringVar()
+        self.output_fn_label = ttk.Label(self.taylor_frame, textvariable=self.output_fn)
+        self.output_fn_label.grid(column=2, row=1, sticky=(W, N))
         
         for child in self.mainframe.winfo_children():
             child.grid_configure(padx=5, pady=5)
@@ -62,11 +47,60 @@ class Taylor:
         root.bind("<Return>", self.calculate_taylor)
 
     def calculate_taylor(self, *args):
-        self.output_function.set("AAAAA 555555")
-        self.source_fn_img = ImageTk.PhotoImage(file="test_image_1.jpg")
-        self.dest_fn_img = ImageTk.PhotoImage(file="test_image_2.jpg")
-        self.output_img_source_fn["image"] = self.source_fn_img
-        self.output_img_dest_fn["image"] = self.dest_fn_img
+        self.output_fn.set(self.input_fn.get() + "aaaaa")
+        # Generate and display the plot here
+        # self.plot_img = ImageTk.PhotoImage(file="test_image_1.jpg")
+        # self.plot["image"] = self.plot_img
+    
+    def create_label_input_frame(self, parent):
+        self.label_input_frame = ttk.Frame(parent)
+        self.label_input_frame.grid(column=1, row=1, sticky=(W, N))
+        
+        # Labels in column 1, inputs in column 2
+        
+        # Labels
+        self.input_fn_label = ttk.Label(self.label_input_frame, text="f(x) =")
+        self.input_fn_label.grid(column=1, row=1, sticky=(E, N))
+        
+        self.x0_label = ttk.Label(self.label_input_frame, text="x =")
+        self.x0_label.grid(column=1, row=2, sticky=(E, N))
+        
+        self.xmin_label = ttk.Label(self.label_input_frame, text="min x =")
+        self.xmin_label.grid(column=1, row=3, sticky=(E, N))
+        
+        self.xmax_label = ttk.Label(self.label_input_frame, text="max x =")
+        self.xmax_label.grid(column=1, row=4, sticky=(E, N))
+        
+        self.poly_degree_label = ttk.Label(self.label_input_frame, text="polinomo laispnis")
+        self.poly_degree_label.grid(column=1, row=5, sticky=(E, N))
+        
+        # Inputs
+        self.input_fn = StringVar()
+        self.input_fn_field = ttk.Entry(self.label_input_frame, width=15, textvariable=self.input_fn)
+        self.input_fn_field.grid(column=2, row=1, sticky=(W, N))
+        
+        self.x0 = StringVar()
+        self.x0_field = ttk.Entry(self.label_input_frame, width=10, textvariable=self.x0)
+        self.x0_field.grid(column=2, row=2, sticky=(W, N))
+        
+        self.xmin = StringVar()
+        self.xmin_field = ttk.Entry(self.label_input_frame, width=10, textvariable=self.xmin)
+        self.xmin_field.grid(column=2, row=3, sticky=(W, N))
+        
+        self.xmax = StringVar()
+        self.xmax_field = ttk.Entry(self.label_input_frame, width=10, textvariable=self.xmax)
+        self.xmax_field.grid(column=2, row=4, sticky=(W, N))
+        
+        self.poly_degree = StringVar()
+        self.poly_degree_field = ttk.Entry(self.label_input_frame, width=5, textvariable=self.poly_degree)
+        self.poly_degree_field.grid(column=2, row=5, sticky=(W, N))
+        
+        # "Aproksimuok" mygtukas
+        self.approximate_btn = ttk.Button(self.label_input_frame, text="Aproksimuok", command=self.calculate_taylor)
+        self.approximate_btn.grid(column=2, row=6, sticky=(N, E))
+        
+        for child in self.label_input_frame.winfo_children():
+            child.grid_configure(padx=5, pady=5)
 
 root = Tk()
 Taylor(root)
