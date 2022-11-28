@@ -2,12 +2,9 @@ from tkinter import *
 from tkinter import ttk
 from PIL import ImageTk
 from matplotlib import pyplot as plt
-import sympy
-from sympy import sin, cos, tan, cot, asin, acos, atan, acot
-from sympy import log, sqrt, root, exp
 from sympy import Derivative
 from sympy.abc import x
-import re
+import numpy as np
 
 from math import pi, e
 
@@ -62,7 +59,9 @@ class Taylor:
         rev_san_der = reverse_sanitize(der)
         
         self.output_fn.set(rev_san_der)
+        
         # Generate and display the plot here
+        # pl = plt.plot()
         # self.plot_img = ImageTk.PhotoImage(file="test_image_1.jpg")
         # self.plot["image"] = self.plot_img
         
