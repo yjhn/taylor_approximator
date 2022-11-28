@@ -1,9 +1,13 @@
 from tkinter import *
 from tkinter import ttk
 from PIL import ImageTk
+import matplotlib
+# If the below line is not included, the app hangs after closing the window.
+matplotlib.use('agg')
 from matplotlib import pyplot as plt
 from sympy import Derivative
 from sympy.abc import x
+from sympy import lambdify
 import numpy as np
 
 from math import pi, e
@@ -60,13 +64,29 @@ class Taylor:
         
         self.output_fn.set(rev_san_der)
         
+        fx_lambda = lambdify(x, san_fx)
+        fx_der_lambda = lambdify(x, der)
+        array = self.arrange()
+        fx_arr = list(map(fx_lambda, array))
+        fx_der_arr = list(map(fx_der_lambda, array))
+        
         # Generate and display the plot here
-        # pl = plt.plot()
-        # self.plot_img = ImageTk.PhotoImage(file="test_image_1.jpg")
-        # self.plot["image"] = self.plot_img
+        pl = plt.plot(array, fx_arr, array, fx_der_arr)
+        plt.savefig("plot.png")
+        self.plot_img = ImageTk.PhotoImage(file="plot.png")
+        self.plot["image"] = self.plot_img
+        plt.clf()
         
         # Show function label
         self.output_fn_label_label.grid()
+    
+    def arrange(self):
+        # Arrange 1000 steps in the interval [xmin; xmax)
+        xmin = self.xmin.get()
+        xmax = self.xmax.get()
+        step_size = (xmax - xmin) / 1000.0
+        arr = np.arange(xmin, xmax, step_size)
+        return arr
     
     def create_label_input_frame(self, parent):
         self.label_input_frame = ttk.Frame(parent)
