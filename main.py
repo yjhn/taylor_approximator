@@ -57,9 +57,11 @@ class Taylor:
 
     def calculate_taylor(self, *args):
         fx = self.input_fn.get()
-        der = derivative(fx)
+        san_fx = sanitize(fx)
+        der = derivative(san_fx)
+        rev_san_der = reverse_sanitize(der)
         
-        self.output_fn.set(der)
+        self.output_fn.set(rev_san_der)
         # Generate and display the plot here
         # self.plot_img = ImageTk.PhotoImage(file="test_image_1.jpg")
         # self.plot["image"] = self.plot_img
@@ -120,7 +122,7 @@ class Taylor:
 # syntax: root(x, 5) = 5th degree root of x
 # log(x, a) = log_a(x)
 # otherwise the syntax is standard as used in Lithuania
-def derivative(fx):
+def sanitize(fx):
     # Replacements to be made in the input:
     # ln -> log
     # arcsin -> asin
@@ -129,7 +131,6 @@ def derivative(fx):
     # arctg -> atan
     # ctg -> cot
     # arcctg -> acot
-    # e^a -> exp(a)
     # a^b -> a**b
     fx = fx.replace("ln", "log")\
             .replace("arcsin", "asin")\
@@ -145,7 +146,31 @@ def derivative(fx):
             .replace("mmm", "exp")
             # hack to replace e with its value
     
-    print(fx)
+    return fx
+
+def reverse_sanitize(fx):
+    # Replacements to be made in the input:
+    # ln <- log // cannot do this, log can take one or two args
+    # arcsin <- asin
+    # arccos <- acos
+    # tg <- tan
+    # arctg <- atan
+    # ctg <- cot
+    # arcctg <- acot
+    # a^b <- a**b
+    fx = str(fx)
+    fx = fx.replace("asin", "arcsin")\
+            .replace("acos", "arccos")\
+            .replace("tan", "tg")\
+            .replace("atan", "arctg")\
+            .replace("cot", "ctg")\
+            .replace("acot", "arcctg")\
+            .replace("**", "^")\
+    
+    return fx
+
+# fx can be a string or sympy expression
+def derivative(fx):
     return Derivative(fx, x, evaluate=True)
 
 root = Tk()
