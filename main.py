@@ -2,6 +2,14 @@ from tkinter import *
 from tkinter import ttk
 from PIL import ImageTk
 from matplotlib import pyplot as plt
+import sympy
+from sympy import sin, cos, tan, cot, asin, acos, atan, acot
+from sympy import log, sqrt, root, exp
+from sympy import Derivative
+from sympy.abc import x
+import re
+
+from math import pi, e
 
 class Taylor:
     
@@ -48,10 +56,15 @@ class Taylor:
         root.bind("<Return>", self.calculate_taylor)
 
     def calculate_taylor(self, *args):
-        self.output_fn.set(self.input_fn.get() + "aaaaa")
+        fx = self.input_fn.get()
+        der = derivative(fx)
+        
+        self.output_fn.set(der)
         # Generate and display the plot here
         # self.plot_img = ImageTk.PhotoImage(file="test_image_1.jpg")
         # self.plot["image"] = self.plot_img
+        
+        # Show function label
         self.output_fn_label_label.grid()
     
     def create_label_input_frame(self, parent):
@@ -103,6 +116,37 @@ class Taylor:
         
         for child in self.label_input_frame.winfo_children():
             child.grid_configure(padx=5, pady=5)
+
+# syntax: root(x, 5) = 5th degree root of x
+# log(x, a) = log_a(x)
+# otherwise the syntax is standard as used in Lithuania
+def derivative(fx):
+    # Replacements to be made in the input:
+    # ln -> log
+    # arcsin -> asin
+    # arccos -> acos
+    # tg -> tan
+    # arctg -> atan
+    # ctg -> cot
+    # arcctg -> acot
+    # e^a -> exp(a)
+    # a^b -> a**b
+    fx = fx.replace("ln", "log")\
+            .replace("arcsin", "asin")\
+            .replace("arccos", "acos")\
+            .replace("tg", "tan")\
+            .replace("arctg", "atan")\
+            .replace("ctg", "cot")\
+            .replace("arcctg", "acot")\
+            .replace("^", "**")\
+            .replace("pi", str(pi))\
+            .replace("exp", "mmm")\
+            .replace("e", str(e))\
+            .replace("mmm", "exp")
+            # hack to replace e with its value
+    
+    print(fx)
+    return Derivative(fx, x, evaluate=True)
 
 root = Tk()
 Taylor(root)
