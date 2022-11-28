@@ -36,6 +36,7 @@ class Taylor:
         
         self.output_fn_label_label = ttk.Label(self.taylor_frame, text="Teiloro eilutė:  ")
         self.output_fn_label_label.grid(column=1, row=1, sticky=(E, N))
+        self.output_fn_label_label.grid_remove()
         
         self.output_fn = StringVar()
         self.output_fn_label = ttk.Label(self.taylor_frame, textvariable=self.output_fn)
@@ -51,6 +52,7 @@ class Taylor:
         # Generate and display the plot here
         # self.plot_img = ImageTk.PhotoImage(file="test_image_1.jpg")
         # self.plot["image"] = self.plot_img
+        self.output_fn_label_label.grid()
     
     def create_label_input_frame(self, parent):
         self.label_input_frame = ttk.Frame(parent)
