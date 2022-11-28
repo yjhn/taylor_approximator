@@ -94,19 +94,19 @@ class Taylor:
         self.input_fn_field = ttk.Entry(self.label_input_frame, width=15, textvariable=self.input_fn)
         self.input_fn_field.grid(column=2, row=1, sticky=(W, N))
         
-        self.x0 = StringVar()
+        self.x0 = DoubleVar()
         self.x0_field = ttk.Entry(self.label_input_frame, width=10, textvariable=self.x0)
         self.x0_field.grid(column=2, row=2, sticky=(W, N))
         
-        self.xmin = StringVar()
+        self.xmin = DoubleVar()
         self.xmin_field = ttk.Entry(self.label_input_frame, width=10, textvariable=self.xmin)
         self.xmin_field.grid(column=2, row=3, sticky=(W, N))
         
-        self.xmax = StringVar()
+        self.xmax = DoubleVar()
         self.xmax_field = ttk.Entry(self.label_input_frame, width=10, textvariable=self.xmax)
         self.xmax_field.grid(column=2, row=4, sticky=(W, N))
         
-        self.poly_degree = StringVar()
+        self.poly_degree = IntVar()
         self.poly_degree_field = ttk.Entry(self.label_input_frame, width=5, textvariable=self.poly_degree)
         self.poly_degree_field.grid(column=2, row=5, sticky=(W, N))
         
