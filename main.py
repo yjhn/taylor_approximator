@@ -5,9 +5,9 @@ import matplotlib
 # If the below line is not included, the app hangs after closing the window.
 matplotlib.use('agg')
 from matplotlib import pyplot as plt
-from sympy import Derivative
+from sympy import diff, lambdify, factorial
 from sympy.abc import x
-from sympy import lambdify
+import sympy
 import numpy as np
 
 from math import pi, e
@@ -58,26 +58,26 @@ class Taylor:
     def calculate_taylor(self, *args):
         fx = self.input_fn.get()
         san_fx = sanitize(fx)
-        der = derivative(san_fx)
-        rev_san_der = reverse_sanitize(der)
-        
-        self.output_fn.set(rev_san_der)
         
         fx_lambda = lambdify(x, san_fx)
-        fx_der_lambda = lambdify(x, der)
         array = self.arrange()
         fx_arr = list(map(fx_lambda, array))
-        fx_der_arr = list(map(fx_der_lambda, array))
+        taylor_exp = make_taylor(san_fx, self.x0.get(), self.poly_degree.get())
+        taylor_exp_lambda = lambdify(x, taylor_exp)
+        
+        rev_san_expr = reverse_sanitize(taylor_exp)
+        self.output_fn.set(rev_san_expr)
+        # Show function label
+        self.output_fn_label_label.grid()
+        
+        taylor_exp_arr = list(map(taylor_exp_lambda, array))
         
         # Generate and display the plot here
-        pl = plt.plot(array, fx_arr, array, fx_der_arr)
+        pl = plt.plot(array, fx_arr, array, taylor_exp_arr)
         plt.savefig("plot.png")
         self.plot_img = ImageTk.PhotoImage(file="plot.png")
         self.plot["image"] = self.plot_img
         plt.clf()
-        
-        # Show function label
-        self.output_fn_label_label.grid()
     
     def arrange(self):
         # Arrange 1000 steps in the interval [xmin; xmax)
@@ -188,8 +188,17 @@ def reverse_sanitize(fx):
     return fx
 
 # fx can be a string or sympy expression
-def derivative(fx):
-    return Derivative(fx, x, evaluate=True)
+def derivative(fx, degree=1):
+    return diff(fx, x, degree, evaluate=True)
+
+# fx - sanitized function
+def make_taylor(fx, x0, degree):
+    fx = sympy.sympify(fx)
+    taylor_exp = sympy.Integer(0)
+    for i in range(0, degree + 1):
+        taylor_exp = taylor_exp + (derivative(fx, i).subs(x, x0) / sympy.factorial(i)) * (x - x0)**i
+    
+    return sympy.simplify(taylor_exp)
 
 root = Tk()
 Taylor(root)
