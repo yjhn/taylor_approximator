@@ -6,5 +6,6 @@ Application to approximate a given function at a given point using Taylor series
 
 - Python
 - pillow
+- numpy
 - sympy
 - matplotlib

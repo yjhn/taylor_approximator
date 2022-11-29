@@ -13,7 +13,6 @@ import numpy as np
 from math import pi, e
 
 class Taylor:
-    
     def __init__(self, root):
         root.title("Funkcijos aproksimavimas Teiloro eilute")
 
