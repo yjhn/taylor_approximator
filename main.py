@@ -73,7 +73,9 @@ class Taylor:
         taylor_exp_arr = list(map(taylor_exp_lambda, array))
         
         # Generate and display the plot here
-        pl = plt.plot(array, fx_arr, array, taylor_exp_arr)
+        plt.plot(array, fx_arr, "b-", label="f(x)")
+        plt.plot(array, taylor_exp_arr, "r-", label="Teiloro eilutė")
+        plt.legend(loc="upper left")
         plt.savefig("plot.png")
         self.plot_img = ImageTk.PhotoImage(file="plot.png")
         self.plot["image"] = self.plot_img
@@ -97,7 +99,7 @@ class Taylor:
         self.input_fn_label = ttk.Label(self.label_input_frame, text="f(x) =")
         self.input_fn_label.grid(column=1, row=1, sticky=(E, N))
         
-        self.x0_label = ttk.Label(self.label_input_frame, text="x =")
+        self.x0_label = ttk.Label(self.label_input_frame, text="x0 =")
         self.x0_label.grid(column=1, row=2, sticky=(E, N))
         
         self.xmin_label = ttk.Label(self.label_input_frame, text="min x =")
@@ -131,15 +133,14 @@ class Taylor:
         self.poly_degree_field.grid(column=2, row=5, sticky=(W, N))
         
         # "Aproksimuok" mygtukas
-        self.approximate_btn = ttk.Button(self.label_input_frame, text="Aproksimuok", command=self.calculate_taylor)
+        self.approximate_btn = ttk.Button(self.label_input_frame, text="Skaičiuok!", command=self.calculate_taylor)
         self.approximate_btn.grid(column=2, row=6, sticky=(N, E))
         
         for child in self.label_input_frame.winfo_children():
             child.grid_configure(padx=5, pady=5)
 
-# syntax: root(x, 5) = 5th degree root of x
+# notable syntax: root(x, 5) = 5th degree root of x
 # log(x, a) = log_a(x)
-# otherwise the syntax is standard as used in Lithuania
 def sanitize(fx):
     # Replacements to be made in the input:
     # ln -> log
