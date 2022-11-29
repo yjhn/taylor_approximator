@@ -9,3 +9,8 @@ Application to approximate a given function at a given point using Taylor series
 - numpy
 - sympy
 - matplotlib
+
+## Running
+
+`python main.py`
+
