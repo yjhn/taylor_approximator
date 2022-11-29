@@ -67,7 +67,7 @@ class Taylor:
         
         rev_san_expr = reverse_sanitize(taylor_exp)
         self.output_fn.set(rev_san_expr)
-        # Show function label
+        # Show taylor series label
         self.output_fn_label_label.grid()
         
         taylor_exp_arr = list(map(taylor_exp_lambda, array))
@@ -167,6 +167,8 @@ def sanitize(fx):
     
     return fx
 
+# Does not perfectly reverse sanitize. Does
+# not replace log(a) with ln(a).
 def reverse_sanitize(fx):
     # Replacements to be made in the input:
     # ln <- log // cannot do this, log can take one or two args
@@ -199,6 +201,7 @@ def make_taylor(fx, x0, degree):
     for i in range(0, degree + 1):
         taylor_exp = taylor_exp + (derivative(fx, i).subs(x, x0) / sympy.factorial(i)) * (x - x0)**i
     
+    # `simplify()` reorders polynome degrees from highest to lowest
     return sympy.simplify(taylor_exp)
 
 root = Tk()
